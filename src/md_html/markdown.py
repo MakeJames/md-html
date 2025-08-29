@@ -1,6 +1,7 @@
 """Markdown module."""
 
-from typing import Generator
+from pathlib import Path
+from typing import Generator, Self
 
 
 class Markdown:
@@ -33,3 +34,19 @@ class Markdown:
                 start = index + 2
         if len(self.content[start:]) > 0:
             yield self.content[start:]
+
+    @classmethod
+    def open(cls, file: str) -> Self:
+        """Open and create an instance of the Markdown class.
+
+        Options:
+            file -- a pathlib ready file path string.
+
+        """
+        md_file = Path(file)
+        content = ""
+
+        with open(md_file, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        return cls(content)
