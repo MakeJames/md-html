@@ -13,6 +13,7 @@ license = {text = "MIT"}
 [project.optional-dependencies]
 test = [
     "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
 ]
 lint = [
     "ruff>=0.12.11",
@@ -34,4 +35,4 @@ mypy = {cmd = "mypy ./src"}
 ruff = {cmd = "ruff check"}
 ruff-fix = {cmd = "ruff check --fix"}
 lint = {composite = ["ruff", "mypy"]}
-test = {cmd = "pytest"}
+test = {cmd = "pytest -vv --cov ./src"}
