@@ -4,7 +4,9 @@
 
 import pytest
 
-from md_html.elements import Elements, HTMLBaseClass, HTMLParseError, P
+from md_html.elements import HTMLBaseClass, P
+from md_html.exceptions import HTMLParseError
+from md_html.utils import Elements
 
 
 class TestHTMLBaseClass:
@@ -102,7 +104,6 @@ class TestHTMLBaseClass:
 
 class TestParagraphElements:
     """Test the methods of the Paragraph class."""
-
 
     @pytest.mark.parametrize(
         "text,expected",

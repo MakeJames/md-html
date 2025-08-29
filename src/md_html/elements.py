@@ -1,26 +1,8 @@
 """Parse Module."""
 
-from enum import StrEnum
+from md_html.exceptions import HTMLParseError
+from md_html.utils import Elements
 
-
-class Elements(StrEnum):
-    """HTML elements lookup."""
-
-    paragraph = "p"
-
-
-class HTMLParseError(Exception):
-    """Exception raised during the parsing of markdown text.
-
-    Attributes:
-        message -- explanation of the error
-
-    """
-
-    def __init__(self, message: str) -> None:
-        """Instantiate the HTMLParseError exception."""
-        self.message = message
-        super().__init__(self.message)
 
 class HTMLBaseClass:
     """Base Class for HTML Element definitions."""
