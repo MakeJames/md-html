@@ -1,7 +1,7 @@
 [project]
 name = "md-html"
 version = "0.1.0"
-description = "Bring the simplicity to structured html markup."
+description = "Bring the simplicity of markdown to structured html markup."
 authors = [
     {name = "makejames", email = "james@makejames.com"},
 ]
@@ -22,12 +22,16 @@ lint = [
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-[tool.ruff]
+[tool.ruff.lint]
 select = ["E", "F", "I", "S", "B", "C4", "ARG", "PERF", "W", "D", "PLR"]
+ignore = ["D203", "D213"]
 
 [tool.pdm]
 distribution = true
 
 [tool.pdm.scripts]
-lint = {cmd = "ruff ./src ./tests"}
+mypy = {cmd = "mypy ./src"}
+ruff = {cmd = "ruff check"}
+ruff-fix = {cmd = "ruff check --fix"}
+lint = {composite = ["ruff", "mypy"]}
 test = {cmd = "pytest"}
