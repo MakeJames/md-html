@@ -1,0 +1,33 @@
+[project]
+name = "md-html"
+version = "0.1.0"
+description = "Bring the simplicity to structured html markup."
+authors = [
+    {name = "makejames", email = "james@makejames.com"},
+]
+dependencies = []
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.4.1",
+]
+lint = [
+    "ruff>=0.12.11",
+    "mypy>=1.17.1",
+]
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.ruff]
+select = ["E", "F", "I", "S", "B", "C4", "ARG", "PERF", "W", "D", "PLR"]
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.scripts]
+lint = {cmd = "ruff ./src ./tests"}
+test = {cmd = "pytest"}
