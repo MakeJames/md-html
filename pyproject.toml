@@ -32,7 +32,8 @@ distribution = true
 
 [tool.pdm.scripts]
 mypy = {cmd = "mypy ./src"}
-ruff = {cmd = "ruff check"}
+ruff-check = {cmd = "ruff check"}
 ruff-fix = {cmd = "ruff check --fix"}
-lint = {composite = ["ruff", "mypy"]}
+lint = {composite = ["ruff-check", "mypy"]}
+pre-commit = {composite = ["lint", "ruff format", "test"]}
 test = {cmd = "pytest -vv --cov ./src"}
