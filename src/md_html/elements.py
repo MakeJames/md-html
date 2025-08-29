@@ -36,20 +36,14 @@ class HTMLBaseClass:
             - `>` with `&gt;`
             - `&` with `&amp;`
         """
-        return self.text.replace(
-            "&amp;", "&"
-        ).replace(
-            "&lt;", "<"
-        ).replace(
-            "&gt;", ">"
-        ).replace(
-            "&", "&amp;"
-        ).replace(
-            "<", "&lt;"
-        ).replace(
-            ">", "&gt;"
+        return (
+            self.text.replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
         )
-
 
     @property
     def html(self) -> str:

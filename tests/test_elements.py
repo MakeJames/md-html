@@ -31,11 +31,8 @@ class TestHTMLBaseClass:
                 "<<<<",
                 "&lt;&lt;&lt;&lt;",
             ),
-            (
-                ">>>>",
-                "&gt;&gt;&gt;&gt;"
-            )
-        ]
+            (">>>>", "&gt;&gt;&gt;&gt;"),
+        ],
     )
     def test_html_escaping_is_correct(self, text, expected) -> None:
         """R-BICEP: Right."""
@@ -47,10 +44,10 @@ class TestHTMLBaseClass:
     @pytest.mark.parametrize(
         "text,expected",
         [
-            ("<&lt;","&lt;&lt;"),
-            (">&gt;","&gt;&gt;"),
-            ("&amp;","&amp;"),
-            ("&&amp;","&amp;&amp;"),
+            ("<&lt;", "&lt;&lt;"),
+            (">&gt;", "&gt;&gt;"),
+            ("&amp;", "&amp;"),
+            ("&&amp;", "&amp;&amp;"),
         ],
     )
     def test_html_escaping_boundary_conditions(self, text, expected) -> None:
@@ -80,7 +77,7 @@ class TestHTMLBaseClass:
             (Elements.paragraph, "Hello World!", "<p>Hello World!</p>"),
             (Elements.paragraph, "Hello <div>", "<p>Hello &lt;div&gt;</p>"),
             (Elements.paragraph, "<p>", "<p>&lt;p&gt;</p>"),
-        ]
+        ],
     )
     def test_html_render_is_correct(self, kind, text, expected) -> None:
         """R-BICEP: Right."""
@@ -93,7 +90,7 @@ class TestHTMLBaseClass:
         [
             (Elements.paragraph, "    ", "<p>    </p>"),
             (Elements.paragraph, "\n", "<p>\n</p>"),
-        ]
+        ],
     )
     def test_html_render_boundary_conditions(self, kind, text, expected) -> None:
         """R-BICEP: Boundary."""
@@ -113,11 +110,15 @@ class TestParagraphElements:
             ("<p>", "<p>&lt;p&gt;</p>"),
             ("**strong text**", "<p>**strong text**</p>"),
             ("*emphasis text*", "<p>*emphasis text*</p>"),
-            ("**strong text with *emphasis***",
-             "<p>**strong text with *emphasis***</p>"),
-            ("***strong text with emphasis***",
-             "<p>***strong text with emphasis***</p>"),
-        ]
+            (
+                "**strong text with *emphasis***",
+                "<p>**strong text with *emphasis***</p>",
+            ),
+            (
+                "***strong text with emphasis***",
+                "<p>***strong text with emphasis***</p>",
+            ),
+        ],
     )
     def test_html_render(self, text, expected) -> None:
         """R-BICEP: Right."""
