@@ -7,3 +7,6 @@ class Elements(StrEnum):
     """HTML elements lookup."""
 
     paragraph = "p"
+    head = "head"
+    html = "html"
+    body = "body"
