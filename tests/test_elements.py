@@ -166,3 +166,19 @@ class TestHTMLElemets:
         test = HTML(title=title, sections=sections, attr=attr)
         print(test.html)
         assert test.html == expected
+
+    @pytest.mark.parametrize(
+        "title,sections,attr,expected",
+        [
+            (
+                "Markdown Document",
+                [],
+                ["class='light'"],
+                "<html lang='en_gb' dir='ltr' class='light'>",
+            ),
+        ],
+    )
+    def test_html_can_parse_custom_attr(self, title, sections, attr, expected) -> None:
+        """R-BICEP: Right."""
+        test = HTML(title=title, sections=sections, attr=attr)
+        assert test.html.split("\n")[0] == expected

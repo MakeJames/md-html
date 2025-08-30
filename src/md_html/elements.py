@@ -77,7 +77,7 @@ class HTML(HTMLBaseClass):
     """The HTML class that declares the page."""
 
     kind = Elements.html
-    attr = ["lang='en_gb'", "dir=ltr"]
+    attr = ["lang='en_gb'", "dir='ltr'"]
 
     def __post_init__(
         self, title: str, sections: list[str], attr: list[str] | None = None, **kwargs
@@ -90,10 +90,9 @@ class HTML(HTMLBaseClass):
         This post-init method.
 
         """
-        self.content = "\n"
         self.head = Head(title=title)
         self.body = Body(sections=sections)
-        self.content = "\n".join([self.head.html, self.body.html])
+        self.content = "\n  ".join(["", self.head.html, self.body.html])
         self.content = self.content + "\n"
         if attr:
             self.attr.append(*attr)
@@ -107,20 +106,18 @@ class Head(HTMLBaseClass):
     def __post_init__(self, title: str, **kwargs) -> None:
         """Create the <head></head> content."""
         self.title = title
-        self.content = (
-            "\n"
-            + "\n".join(
-                [
-                    self._charset,
-                    self._viewport,
-                    self._title,
-                    self._description,
-                    self._author,
-                    self._style,
-                ]
-            )
-            + "\n"
+        self.content = "\n    ".join(
+            [
+                self.content,
+                self._charset,
+                self._viewport,
+                self._title,
+                self._description,
+                self._author,
+                self._style,
+            ]
         )
+        self.content = self.content + "\n  "
 
     @property
     def _charset(self) -> str:
@@ -196,7 +193,6 @@ class Body(HTMLBaseClass):
 
     def __post_init__(self, sections: list[str], **kwargs) -> None:
         """Instantiate the Body class."""
-        self.content = "\n"
         for section in sections:
-            self.content = "\n".join([self.content, P(content=section).html])
-        self.content = self.content + "\n"
+            self.content = "\n    ".join([self.content, P(content=section).html])
+        self.content = self.content + "\n  "
