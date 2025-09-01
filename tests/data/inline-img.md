@@ -1,0 +1,12 @@
+# Images
+
+Here is an inline image:
+
+![Alt text](https://via.placeholder.com/150 "Placeholder")
+
+And another with no title:
+
+![Logo](https://via.placeholder.com/100)
+
+Some text after the images.
+
