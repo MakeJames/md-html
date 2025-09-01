@@ -2,7 +2,7 @@
 
 # ruff: noqa: S101 S301
 
-import pickle
+import json
 
 import pytest
 
@@ -169,8 +169,8 @@ class TestHTMLElements:
     ) -> None:
         """R-BICEP: Right."""
         snapshot.snapshot_dir = "tests/snapshots/html"
-        with open(f"./tests/data/sections/{file}.txt", "rb") as _file:
-            sections = pickle.load(_file)
+        with open(f"./tests/data/sections/{file}.json", "rb") as _file:
+            sections = json.load(_file)
         test = HTML(title=title, sections=sections, atr=attr)
         snapshot.assert_match(test.html, f"{file}.html")
 

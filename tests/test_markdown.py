@@ -2,7 +2,7 @@
 
 # ruff: noqa: S101, E501
 
-import pickle
+import json
 
 import pytest
 
@@ -36,5 +36,5 @@ class TestMarkdown:
         with open(f"./tests/data/{file}.md", "r") as md_file:
             content = md_file.read()
         test = Markdown(content)
-        test_sections = pickle.dumps(list(test.sections))
-        snapshot.assert_match(test_sections, f"{file}.txt")
+        test_sections = json.dumps(list(test.sections))
+        snapshot.assert_match(test_sections, f"{file}.json")
