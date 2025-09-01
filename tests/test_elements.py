@@ -1,13 +1,14 @@
 """Test the parser module."""
 
-# ruff: noqa: S101
+# ruff: noqa: S101 S301
+
+import pickle
 
 import pytest
 
 from md_html.elements import HTML, HTMLBaseClass, P
 from md_html.exceptions import HTMLParseError
 from md_html.utils import Elements
-from tests.utils.template_blocks import Block1, Block2, Block3, Block4
 
 
 class TestHTMLBaseClass:
@@ -110,6 +111,7 @@ class TestHTMLBaseClass:
                 "<html lang='en_gb' dir='ltr'></html>",
             ),
             (Elements.paragraph, [""], "\n", "<p>\n</p>"),
+            (Elements.paragraph, [], "\n", "<p>\n</p>"),
         ],
     )
     def test_html_render_attributes(self, kind, attr, content, expected) -> None:
@@ -147,25 +149,30 @@ class TestParagraphElements:
         assert test.html == expected
 
 
-class TestHTMLElemets:
+class TestHTMLElements:
     """Test the methods of the HTML class."""
 
     @pytest.mark.parametrize(
-        "title,sections,attr,expected",
+        "title,file,attr",
         [
-            ("Markdown Document", Block1.sections, [], Block1.html),
-            ("Markdown Document", Block2.sections, [], Block2.html),
-            ("Markdown Document", Block3.sections, [], Block3.html),
-            ("Markdown Document", Block4.sections, [], Block4.html),
+            ("Markdown Document", "table", []),
+            ("Markdown Document", "inline-img", []),
+            ("Markdown Document", "quantum-slopes", []),
+            ("Markdown Document", "blockquote", []),
+            ("Markdown Document", "perfectly-ripe-tomatoes", []),
+            ("Markdown Document", "a-grand-day-out", []),
+            ("Markdown Document", "a-tower-of-blocks", []),
         ],
     )
     def test_html_render_of_html_elements(
-        self, title, sections, attr, expected
+        self, title, file, attr, snapshot
     ) -> None:
         """R-BICEP: Right."""
-        test = HTML(title=title, sections=sections, attr=attr)
-        print(test.html)
-        assert test.html == expected
+        snapshot.snapshot_dir = "tests/snapshots/html"
+        with open(f"./tests/data/sections/{file}.txt", "rb") as _file:
+            sections = pickle.load(_file)
+        test = HTML(title=title, sections=sections, atr=attr)
+        snapshot.assert_match(test.html, f"{file}.html")
 
     @pytest.mark.parametrize(
         "title,sections,attr,expected",

@@ -52,7 +52,6 @@ parser.add_argument(
     help="Print the Version number and exit.",
 )
 
-
 def usage() -> None:
     """Print usage documentation and exit."""
     parser.print_usage()

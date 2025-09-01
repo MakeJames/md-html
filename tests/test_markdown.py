@@ -2,28 +2,39 @@
 
 # ruff: noqa: S101, E501
 
+import pickle
+
 import pytest
 
 from md_html.markdown import Markdown
-from tests.utils.template_blocks import Block1, Block2, Block3, Block4
 
 
 class TestMarkdown:
     """Test the methods of the Markdown class."""
 
     @pytest.mark.parametrize(
-        "content,expected",
+        "file",
         [
-            (Block1.md, Block1.sections),
-            (Block2.md, Block2.sections),
-            (Block3.md, Block3.sections),
-            (Block4.md, Block4.sections),
+            ("basic"),
+            ("code"),
+            ("inline-img"),
+            ("empty"),
+            ("blockquote"),
+            ("table"),
+            ("lists-and-quotes"),
+            ("quantum-slopes"),
+            ("a-tower-of-blocks"),
+            ("a-grand-day-out"),
+            ("perfectly-ripe-tomatoes"),
         ],
     )
     def test_given_markdwon_sections_splits_on_empty_lines(
-        self, content, expected
+        self, file, snapshot
     ) -> None:
         """R-BICEP: Right."""
+        snapshot.snapshot_dir = "tests/snapshots/markdown/sections/"
+        with open(f"./tests/data/{file}.md", "r") as md_file:
+            content = md_file.read()
         test = Markdown(content)
-        test_sections = list(test.sections)
-        assert test_sections == expected
+        test_sections = pickle.dumps(list(test.sections))
+        snapshot.assert_match(test_sections, f"{file}.txt")
