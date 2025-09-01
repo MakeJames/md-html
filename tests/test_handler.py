@@ -77,3 +77,24 @@ class TestCLI:
         result = run_cli([str(missing)])
         assert result.returncode == 1
         assert "No such file or directory" in result.stderr
+
+    @pytest.mark.parametrize(
+        "file",
+        [
+            ("basic.md"),
+            ("blockquote.md"),
+            ("code.md"),
+            ("empty.md"),
+            ("inline-img.md"),
+            ("mixed-content.md"),
+            ("table.md"),
+        ],
+    )
+    def test_read_file_to_stdout_snapshot(self, file, snapshot,
+                                          run_cli) -> None:
+        """R-BICEP: Right."""
+        snapshot.snapshot_dir = "tests/snapshots/cli"
+        result = run_cli(args=[f"./tests/data/{file}"])
+        snapshot.assert_match(result.stdout,
+                              ("test_read_file_to_stdout_"
+                               f"{file.split('.')[0] + '.html'}"))
