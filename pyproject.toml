@@ -10,6 +10,9 @@ requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
+[project.scripts]
+md-html = "md_html.handler:main"
+
 [project.optional-dependencies]
 test = [
     "pytest>=8.4.1",

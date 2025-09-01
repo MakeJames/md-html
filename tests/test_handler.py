@@ -4,19 +4,17 @@
 
 import pytest
 
-from md_html.handler import main, parser
+from md_html.__version__ import version
+from md_html.handler import parser
 
 
 class TestHandler:
     """Test the instantiation of the cli."""
 
-    def test_when_called_with_no_args_then_help_text(self, capsys) -> None:
+    def test_when_called_with_no_args_then_file_is_none(self) -> None:
         """R-BICEP: Right."""
-        with pytest.raises(SystemExit) as e:
-            parser.parse_args([])
-        assert e.value.code != 0
-        captured = capsys.readouterr()
-        assert "usage" in captured.err
+        args = parser.parse_args([])
+        assert args.file is None
 
     def test_help_flag(self, capsys):
         """R-BICEP: Right."""
@@ -45,47 +43,37 @@ class TestHandler:
 class TestCLI:
     """Test the output and processing through the cli."""
 
-    def run_cli(self, args, input_data=None) -> None:
-        """Run CLI with subprocess and return result."""
-        main(parser.parse_args([*args]), input_data)
+    SUCCESS = 0
+    ERROR = 1
+    MISSUSE_OF_SHELL = 2
 
-    def test_help_flag(self, capsys):
+    @pytest.mark.parametrize(
+        "args,return_code,stdouterr",
+        [
+            (["--help"], SUCCESS, "usage"),
+            ([], MISSUSE_OF_SHELL, "usage"),
+            (["--version"], SUCCESS, f"md-html {version}"),
+            (["-"], ERROR, "No such file or directory"),
+
+        ]
+    )
+    def test_cli_interface(self, run_cli, args, return_code, stdouterr):
         """R-BICEP: Right."""
-        with pytest.raises(SystemExit) as e:
-            self.run_cli(["--help"])
-        assert e.value.code == 0
-        captured = capsys.readouterr()
-        assert "usage" in captured.out.lower()
+        result = run_cli(args, input_data=None, use_script=True)
+        assert result.returncode == return_code
+        assert stdouterr in (result.stdout + result.stderr)
 
-    def test_no_args_prints_usage(self, capsys):
-        """R-BICEP: Right."""
-        with pytest.raises(SystemExit) as e:
-            self.run_cli([])
-        assert e.value.code != 0
-        captured = capsys.readouterr()
-        assert "usage" in captured.err.lower()
-
-    def test_version_flag(self, capsys):
-        """R-BICEP: Right."""
-        with pytest.raises(SystemExit) as e:
-            self.run_cli(["--version"])
-        assert e.value.code == 0
-        captured = capsys.readouterr()
-        assert "md-html" in captured.out.lower()
-
-    def test_basic_file_to_file(self, tmp_path):
+    def test_basic_file_to_file(self, tmp_path, run_cli):
         """R-BICEP: Right."""
         md_file = tmp_path / "input.md"
         md_file.write_text("# Hello\n\nThis is a test.")
-        self.run_cli([str(md_file)])
+        result = run_cli([str(md_file)])
+        assert result.returncode == 0
+        assert "<html lang='en_gb' dir='ltr'>" in result.stdout
 
-    def test_stdin_to_stdout(self):
-        """R-BICEP: Right."""
-        md_text = "# Heading\n\nParagraph"
-        self.run_cli(["-"], input_data=md_text)
-
-    def test_file_not_found(self, tmp_path):
+    def test_file_not_found(self, tmp_path, run_cli):
         """R-BICEP: Boundary."""
         missing = tmp_path / "does_not_exist.md"
-        with pytest.raises(FileNotFoundError):
-            self.run_cli([str(missing)])
+        result = run_cli([str(missing)])
+        assert result.returncode == 1
+        assert "No such file or directory" in result.stderr

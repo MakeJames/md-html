@@ -21,11 +21,6 @@ License: MIT
 
 """
 
-import sys
+from md_html.handler import main
 
-from md_html.handler import main, parser
-
-args = parser.parse_args()
-input = sys.stdin.read()
-
-main(args, input)
+main()

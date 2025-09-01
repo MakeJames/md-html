@@ -1,7 +1,10 @@
 """Markdown module."""
 
+import sys
 from pathlib import Path
 from typing import Generator, Self
+
+from md_html.exceptions import MDParseError
 
 
 class Markdown:
@@ -36,17 +39,34 @@ class Markdown:
             yield self.content[start:]
 
     @classmethod
-    def open(cls, file: str) -> Self:
-        """Open and create an instance of the Markdown class.
+    def from_stdin(cls, **kwargs) -> Self:
+        """Generate a markdown instance from stdin."""
+        if sys.stdin.isatty():
+            raise MDParseError("No Markdown content supplied to the cli.")
+        content = sys.stdin.read()
+        if content == "":
+            raise MDParseError("No Markdown content supplied to the cli.")
+        return cls(content=content, **kwargs)
 
-        Options:
-            file -- a pathlib ready file path string.
-
-        """
+    @classmethod
+    def from_file(cls, file: str, **kwargs) -> Self:
+        """Generate a markdown instance from a file."""
         md_file = Path(file)
         content = ""
 
         with open(md_file, "r", encoding="utf-8") as f:
             content = f.read()
 
-        return cls(content)
+        return cls(content, **kwargs)
+
+    @classmethod
+    def from_args(cls, file: str | None, **kwargs) -> Self:
+        """Open and create an instance of the Markdown class.
+
+        Options:
+            file -- a pathlib ready file path string.
+
+        """
+        if file:
+            return cls.from_file(file, **kwargs)
+        return cls.from_stdin(**kwargs)
