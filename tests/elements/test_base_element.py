@@ -117,3 +117,39 @@ class TestHTMLBaseClass:
         test_instance.kind = kind
         test_instance.attr = attr
         assert test_instance.html == expected
+
+    @pytest.mark.parametrize(
+        "content,expects",
+        [
+            (
+                "[link text](https://example.com)",
+                "<a href=\"https://example.com\">link text</a>",
+            ),
+            (
+                "![link text](https://example.com)",
+                "![link text](https://example.com)",
+            ),
+            (
+                "[link text](https://example.com)\n[Another link](https://example.com)",
+                "<a href=\"https://example.com\">link text</a>\n" \
+                "<a href=\"https://example.com\">Another link</a>",
+            ),
+            (
+                "[](https://example.com)",
+                "<a href=\"https://example.com\"></a>",
+            ),
+            (
+                "[link text] more text between this (https://example.com)",
+                "[link text] more text between this (https://example.com)",
+            ),
+            (
+                "[link text](https://example.com",
+                "[link text](https://example.com"
+            ),
+        ],
+    )
+    def test_html_find_and_replace_links(self, content, expects) -> None:
+        """R-BICEP: Right."""
+        test = HTMLBaseClass(content)
+        test._replace_links()
+        assert test.content == expects

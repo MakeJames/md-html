@@ -4,7 +4,7 @@
 
 import pytest
 
-from md_html.elements import Content, P
+from md_html.elements import Content, H, P
 from md_html.elements.html import HTML
 
 
@@ -17,7 +17,7 @@ class TestHTMLElements:
             (
                 "Markdown Document",
                 [
-                    Content(P, "# Hello World"),
+                    Content(H, "# Hello World"),
                     Content(
                         P, "A paragraph with **bold**, *italic*, and `inline code`.\n"
                     ),
@@ -27,17 +27,17 @@ class TestHTMLElements:
                     ),
                 ],
                 [
-                    "<p># Hello World</p>",
+                    "<h1># Hello World</h1>",
                     "<p>A paragraph with **bold**, *italic*, and `inline code`.\n</p>",
                     "<p>1. Ordered item",
-                    "[link](https://example.com/test)",
+                    "<a href=\"https://example.com/test\">link</a>",
                 ],
             ),
             (
                 "Markdown Document",
                 [
                     Content(P, """```json\n{"key": "value"}\n```\n"""),
-                    Content(P, "## A section heading"),
+                    Content(H, "## A section heading"),
                     Content(
                         P,
                         """- [ ] A checked list\n- [x] With some checked items
@@ -48,7 +48,7 @@ class TestHTMLElements:
                 ],
                 [
                     "<p>```json\n{\"key\": \"value\"}\n```\n",
-                    "<p>## A section heading</p>",
+                    "<h2>## A section heading</h2>",
                     "<p>- [ ] A checked list",
                     "    - with nested",
                 ],
