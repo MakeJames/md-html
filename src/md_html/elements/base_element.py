@@ -1,5 +1,7 @@
 """Parse Module."""
 
+import re
+
 from enum import StrEnum
 
 from md_html.exceptions import HTMLParseError
@@ -8,18 +10,36 @@ from md_html.exceptions import HTMLParseError
 class Elements(StrEnum):
     """HTML elements lookup."""
 
-    paragraph = "p"
+    body = "body"
     head = "head"
     heading = "h"
     html = "html"
-    body = "body"
+    link = "a"
+    paragraph = "p"
 
 
 class HTMLBaseClass:
-    """Base Class for HTML Element definitions."""
+    """Base Class for HTML Element definitions.
+
+    Attributes:
+        attr
+            A list of element attributes. These are rendered in the opening element tag.
+        kind
+            The class Element. References the Elements string Enum.
+        html
+            A class property returns the html fragment.
+        tag
+            The html tag that will be rendered in the html fragment.
+
+    Raises:
+        HTMLParseError
+            If it is unable to process the html.
+
+    """
 
     kind: Elements
     attr: list[str] = [""]
+    _link_pattern = re.compile(r'(?<!\!)\[([^\]]*)\]\((\S+)(?:\s+"([^"]*)")?\)')
 
     def __init__(self, content: str = "", **kwargs) -> None:
         """Instantiate the class."""
@@ -37,6 +57,7 @@ class HTMLBaseClass:
     def __pre_render__(self) -> None:
         """Empty method that is called before html."""
         self._add_space_to_first_attr()
+        self._replace_links()
 
     def _add_space_to_first_attr(self) -> None:
         if len(self.attr) == 0:
@@ -48,6 +69,13 @@ class HTMLBaseClass:
             return
 
         self.attr[0] = " " + first_attr if first_attr[0] != " " else first_attr
+
+    def _replace_links(self) -> None:
+        def repl(match):
+            link_text = match.group(1)
+            href = match.group(2)
+            return f"<a href=\"{href}\">{link_text}</a>"
+        self.content = self._link_pattern.sub(repl, self.content)
 
     @property
     def escape(self) -> str:

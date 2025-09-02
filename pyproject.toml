@@ -1,6 +1,6 @@
 [project]
 name = "md-html"
-version = "0.1.1"
+version = "0.1.2"
 description = "Bring the simplicity of markdown to structured html markup."
 authors = [
     {name = "makejames", email = "james@makejames.com"},
