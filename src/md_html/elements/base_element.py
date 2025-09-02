@@ -10,6 +10,7 @@ class Elements(StrEnum):
 
     paragraph = "p"
     head = "head"
+    heading = "h"
     html = "html"
     body = "body"
 
@@ -71,4 +72,14 @@ class HTMLBaseClass:
     def html(self) -> str:
         """Returns the html of the element."""
         self.__pre_render__()
-        return f"<{self.kind}{' '.join(self.attr)}>{self.content}</{self.kind}>"
+        return f"<{self.tag}{' '.join(self.attr)}>{self.content}</{self.tag}>"
+
+    @property
+    def tag(self) -> str:
+        """Returns the element tag.
+
+        By default this returns the class.kind attribute.
+        This method can be over-typed for custom logic,
+        such as heading elements.
+        """
+        return self.kind
