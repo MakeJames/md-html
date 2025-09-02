@@ -1,1 +1,0 @@
-["# Code Examples", "Here is some inline code: `print(\"hi\")`.", "```python\ndef add(a, b):\n    return a + b\n``", "```bash\necho \"hello world\"\n```"]

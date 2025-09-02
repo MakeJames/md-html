@@ -58,9 +58,16 @@ class TestCLI:
             ([], MISSUSE_OF_SHELL, "usage", False),
             (["--version"], SUCCESS, f"md-html {version}", False),
             (["-"], ERROR, "No such file or directory", False),
-        ]
+        ],
     )
-    def test_cli_interface(self, run_cli, args, return_code, stdouterr, use_script,):
+    def test_cli_interface(
+        self,
+        run_cli,
+        args,
+        return_code,
+        stdouterr,
+        use_script,
+    ):
         """R-BICEP: Right."""
         result = run_cli(args, input_data=None, use_script=use_script)
         assert result.returncode == return_code
@@ -96,13 +103,11 @@ class TestCLI:
             ("perfectly-ripe-tomatoes"),
         ],
     )
-    def test_read_file_to_stdout_snapshot(self, file, snapshot,
-                                          run_cli) -> None:
+    def test_read_file_to_stdout_snapshot(self, file, snapshot, run_cli) -> None:
         """R-BICEP: Right."""
         snapshot.snapshot_dir = "tests/snapshots/cli"
         result = run_cli(args=[f"./tests/data/{file}.md"])
-        snapshot.assert_match(result.stdout,
-                              f"test_read_file_to_stdout_{file}.html")
+        snapshot.assert_match(result.stdout, f"test_read_file_to_stdout_{file}.html")
 
     @pytest.mark.parametrize(
         "file,return_code,expect",
@@ -119,8 +124,9 @@ class TestCLI:
             ("perfectly-ripe-tomatoes", 0, None),
         ],
     )
-    def test_stdin_to_stdout_snapshot(self, file, return_code, expect, snapshot,
-                                      run_cli) -> None:
+    def test_stdin_to_stdout_snapshot(
+        self, file, return_code, expect, snapshot, run_cli
+    ) -> None:
         """R-BICEP: Right."""
         snapshot.snapshot_dir = "tests/snapshots/cli"
         with open(f"./tests/data/{file}.md", "r") as _file:
@@ -130,5 +136,6 @@ class TestCLI:
         if expect:
             assert expect in (result.stderr + result.stdout)
         else:
-            snapshot.assert_match(result.stdout,
-                                  f"test_read_file_to_stdout_{file}.html")
+            snapshot.assert_match(
+                result.stdout, f"test_read_file_to_stdout_{file}.html"
+            )

@@ -1,9 +1,11 @@
 """Markdown module."""
 
+import re
 import sys
 from pathlib import Path
 from typing import Generator, Self
 
+from md_html.elements import Content, H, P
 from md_html.exceptions import MDParseError
 
 
@@ -19,6 +21,15 @@ class Markdown:
         """
         self.content = content
 
+    def element(self, content: str) -> Content:
+        """First guess element calculation."""
+        first_char = content[0] if content != "" else ""
+        match first_char:
+            case "#":
+                return Content(H, content)
+            case _:
+                return Content(P, content)
+
     @property
     def sections(self) -> Generator:
         """Splits the markdown content into parse-ready blocks.
@@ -33,10 +44,10 @@ class Markdown:
         for index, char in enumerate(self.content):
             next_index = index + 1 if index + 1 < len(self.content) else index
             if char == "\n" and self.content[next_index] == "\n":
-                yield self.content[start:index]
+                yield self.element(self.content[start:index])
                 start = index + 2
         if len(self.content[start:]) > 0:
-            yield self.content[start:]
+            yield self.element(self.content[start:])
 
     @classmethod
     def from_stdin(cls, **kwargs) -> Self:
