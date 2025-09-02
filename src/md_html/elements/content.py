@@ -23,6 +23,6 @@ class Content(Generic[HTMLElement]):
     kind: HTMLFactory[HTMLElement]
     content: str
 
-    def build(self, *args: tuple[Any, ...], **kwargs: dict[str, Any] ) -> HTMLElement:
+    def build(self, *args: tuple[Any, ...], **kwargs: dict[str, Any]) -> HTMLElement:
         """Build the content."""
         return self.kind(self.content, *args, **kwargs)

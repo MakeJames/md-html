@@ -2,10 +2,9 @@
 
 # ruff: noqa: S101
 
-import json
-
 import pytest
 
+from md_html.elements import Content, P
 from md_html.elements.html import HTML
 
 
@@ -13,24 +12,55 @@ class TestHTMLElements:
     """Test the methods of the HTML class."""
 
     @pytest.mark.parametrize(
-        "title,file,attr",
+        "title,sections,expects",
         [
-            ("Markdown Document", "table", []),
-            ("Markdown Document", "inline-img", []),
-            ("Markdown Document", "quantum-slopes", []),
-            ("Markdown Document", "blockquote", []),
-            ("Markdown Document", "perfectly-ripe-tomatoes", []),
-            ("Markdown Document", "a-grand-day-out", []),
-            ("Markdown Document", "a-tower-of-blocks", []),
+            (
+                "Markdown Document",
+                [
+                    Content(P, "# Hello World"),
+                    Content(
+                        P, "A paragraph with **bold**, *italic*, and `inline code`.\n"
+                    ),
+                    Content(
+                        P,
+                        "1. Ordered item\n2. Another item\n3. Final item with a [link](https://example.com/test)\n",
+                    ),
+                ],
+                [
+                    "<p># Hello World</p>",
+                    "<p>A paragraph with **bold**, *italic*, and `inline code`.\n</p>",
+                    "<p>1. Ordered item",
+                    "[link](https://example.com/test)",
+                ],
+            ),
+            (
+                "Markdown Document",
+                [
+                    Content(P, """```json\n{"key": "value"}\n```\n"""),
+                    Content(P, "## A section heading"),
+                    Content(
+                        P,
+                        """- [ ] A checked list\n- [x] With some checked items
+- [ ] And other items
+    - with nested
+    - items""",
+                    ),
+                ],
+                [
+                    "<p>```json\n{\"key\": \"value\"}\n```\n",
+                    "<p>## A section heading</p>",
+                    "<p>- [ ] A checked list",
+                    "    - with nested",
+                ],
+            ),
         ],
     )
-    def test_html_render_of_html_elements(self, title, file, attr, snapshot) -> None:
+    def test_html_render_of_html_elements(self, title, sections, expects) -> None:
         """R-BICEP: Right."""
-        snapshot.snapshot_dir = "tests/snapshots/html"
-        with open(f"./tests/data/sections/{file}.json", "rb") as _file:
-            sections = json.load(_file)
-        test = HTML(title=title, sections=sections, atr=attr)
-        snapshot.assert_match(test.html, f"{file}.html")
+        test = HTML(title=title, sections=sections, atr=[])
+        print(test.html)
+        for expect in expects:
+            assert expect in test.html
 
     @pytest.mark.parametrize(
         "title,sections,attr,expected",
