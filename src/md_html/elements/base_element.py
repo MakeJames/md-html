@@ -1,7 +1,17 @@
 """Parse Module."""
 
+from enum import StrEnum
+
 from md_html.exceptions import HTMLParseError
-from md_html.utils import Elements
+
+
+class Elements(StrEnum):
+    """HTML elements lookup."""
+
+    paragraph = "p"
+    head = "head"
+    html = "html"
+    body = "body"
 
 
 class HTMLBaseClass:

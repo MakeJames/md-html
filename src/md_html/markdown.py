@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import Generator, Self
 
+from md_html.elements import Content, P
 from md_html.exceptions import MDParseError
 
 
@@ -33,10 +34,10 @@ class Markdown:
         for index, char in enumerate(self.content):
             next_index = index + 1 if index + 1 < len(self.content) else index
             if char == "\n" and self.content[next_index] == "\n":
-                yield self.content[start:index]
+                yield Content(P, self.content[start:index])
                 start = index + 2
         if len(self.content[start:]) > 0:
-            yield self.content[start:]
+            yield Content(P, self.content[start:])
 
     @classmethod
     def from_stdin(cls, **kwargs) -> Self:

@@ -4,9 +4,8 @@
 
 import pytest
 
-from md_html.elements.base_element import HTMLBaseClass
+from md_html.elements.base_element import Elements, HTMLBaseClass
 from md_html.exceptions import HTMLParseError
-from md_html.utils import Elements
 
 
 class TestHTMLBaseClass:

@@ -2,6 +2,7 @@
 
 from md_html.elements.base_element import Elements, HTMLBaseClass
 from md_html.elements.body import Body
+from md_html.elements.content import Content
 from md_html.elements.head import Head
 
 
@@ -14,7 +15,7 @@ class HTML(HTMLBaseClass):
     def __post_init__(
         self,
         title: str,
-        sections: list[str],
+        sections: list[Content],
         attr: list[str] | None = None,
         **kwargs,
     ) -> None:
